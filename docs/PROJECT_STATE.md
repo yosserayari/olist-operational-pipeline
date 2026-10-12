@@ -90,24 +90,17 @@ These findings are not all confirmed business errors. Preserve source data and d
 
 ## Current state and next action
 
-The end-to-end pipeline runner is implemented in `scripts/run_pipeline.py`.
+The end-to-end runner is implemented in `scripts/run_pipeline.py`.
 
-Run it from the project root with:
+The pipeline loads the nine raw CSV files, rebuilds staging, runs core data-quality checks, builds the marts, recreates the reporting views, and verifies key row counts.
 
-```powershell
-python scripts/run_pipeline.py
-```
+**Verified quality checks:** 8 core checks pass.
 
-The first full run succeeded:
-- 9 raw CSV files loaded.
-- Staging, mart and reporting layers rebuilt.
-- 99,441 orders matched across raw, staging and mart.
-- 112,650 order items matched across raw, staging and mart.
-- 634 daily sales reporting rows generated.
+**Known observations:** 8 delivered orders missing delivery timestamps, 189 timestamp-sequence violations, 4 non-positive product weights, 2 invalid installment counts, and 775 orders without item records.
 
-PostgreSQL connectivity was verified from a fresh terminal.
+These are reported rather than automatically corrected.
 
-**Next:** add automated data-quality checks for key uniqueness, referential integrity, valid values and business rules. Matching row counts alone does not prove the data is correct.
+**Next:** strengthen automated testing and make setup requirements clear so another engineer can reproduce the pipeline.
 
 ## 8. Important project paths
 

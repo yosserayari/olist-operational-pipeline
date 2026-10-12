@@ -49,23 +49,16 @@ For example, item price plus freight is our current gross order value calculatio
 
 ## Template for future sessions
 
-### Session date
-**Objective:**
+#### Automated data-quality checks
 
-**What I built:**
+**What I built:** SQL checks for key uniqueness, referential integrity, valid values and known anomalies, integrated into the pipeline runner.
 
-**Why it was needed:**
+**Why:** Successful execution and matching row counts alone do not prove the data is valid.
 
-**Decision or trade-off:**
+**Important distinction:** Core failures stop the pipeline; known anomalies are reported for investigation instead of silently changing the data.
 
-**Problem encountered and how it was resolved:**
+**Practice check:** Explain why a missing foreign key should fail a core check, while an unusual delivery timestamp might be reported for investigation.
 
-**What I can explain without notes:**
-
-**What I still don't understand:**
-
-**Next practice task:**
-
----
+**Next practice task:** Add automated tests that verify the pipeline's outputs and failure behavior.
 
 Update this log honestly. Completing a task does not automatically mean I understand the concept. Use the practice checks to identify what needs revisiting.

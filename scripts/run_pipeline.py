@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
+from src.validation.data_quality_checks import run_data_quality_checks
 
 load_dotenv(ROOT / ".env")
 
@@ -106,6 +107,7 @@ def main():
             conn,
             "sql/staging/build_staging.sql",
         )
+        run_data_quality_checks(conn)
 
         # The reporting view depends on mart tables.
         # Drop it before rebuilding those tables.
