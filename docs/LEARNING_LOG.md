@@ -62,3 +62,14 @@ For example, item price plus freight is our current gross order value calculatio
 **Next practice task:** Add automated tests that verify the pipeline's outputs and failure behavior.
 
 Update this log honestly. Completing a task does not automatically mean I understand the concept. Use the practice checks to identify what needs revisiting.
+
+### Testing quality-check behavior
+
+Added two tests using a fake database connection.
+
+- A critical quality-check failure raises an error.
+- A warning is reported without failing the check run.
+
+The test suite now has 10 passing tests.
+
+**Next practice:** explain how a critical error prevents the pipeline from continuing to build downstream models.
