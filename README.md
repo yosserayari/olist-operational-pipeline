@@ -146,7 +146,7 @@ A successful local run produced:
 | Reviews | 99,224 |
 | Products | 32,951 |
 | Daily sales reporting rows | 634 |
-| Automated tests | 8 passed |
+| Automated tests | 11 passed |
 
 These counts describe the current dataset and are expected to change if the source data changes.
 

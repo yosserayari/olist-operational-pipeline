@@ -73,3 +73,15 @@ Added two tests using a fake database connection.
 The test suite now has 10 passing tests.
 
 **Next practice:** explain how a critical error prevents the pipeline from continuing to build downstream models.
+
+### Pipeline failure handling
+
+Added a test that simulates a critical data-quality failure and checks
+that the runner stops before building the marts and reporting views.
+
+The test uses mocked connections, so it does not modify the real database.
+
+**Lesson:** Testing an individual function is different from testing how
+the pipeline behaves when that function fails.
+
+**Current result:** 11 tests passed.

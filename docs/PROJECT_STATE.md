@@ -61,7 +61,7 @@ It includes daily order counts, delivered and active orders, orders without item
 - The first pipeline run exposed a missing `pandas` dependency.
 - Added `pandas==3.0.6` to `requirements.txt`.
 - Re-ran the pipeline successfully.
-- Re-ran the test suite: 8 tests passed.
+- Re-ran the test suite: 11 tests passed.
 
 The fresh-environment test caught and resolved an undeclared dependency.
 This verifies the pipeline against the current local database and source files,
@@ -130,7 +130,7 @@ python -m pytest -v
 
 **Why:** A successful pipeline run does not prove its output is correct. Tests make important assumptions repeatable and catch regressions.
 
-**Current result:** All 8 tests passed.
+**Current result:** All 11 tests passed.
 
 **Practice question:** What is the difference between checking data quality during a pipeline run and testing the pipeline's output afterward?
 
