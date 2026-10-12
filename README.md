@@ -161,3 +161,24 @@ These records are not automatically corrected. A reported anomaly is not necessa
 The project demonstrates data ingestion, SQL transformation, relational modelling, data-quality checks and automated tests. Work remains to improve setup reproducibility, test failure handling and document business metric definitions.
 
 The goal is to make the pipeline understandable and reproducible by another engineer, rather than simply produce a set of database tables.
+
+PS : 
+### Windows troubleshooting: Psycopg DLL error
+
+On some Windows systems, application-control policies may block Psycopg's bundled binary extension.
+
+If importing Psycopg fails with a DLL or `libpq` error:
+
+1. Add `C:\Program Files\PostgreSQL\18\bin` to your Windows user `Path`.
+2. Add a user environment variable named `PSYCOPG_IMPL` with the value `python`.
+3. Restart VS Code.
+
+Verify the selected implementation:
+
+```powershell
+python -c "import psycopg; print(psycopg.pq.__impl__)"
+```
+
+It should print `python`.
+
+The pure-Python implementation still requires PostgreSQL's `libpq` client library. It is slower than the compiled implementations, but suitable for this local project. Most users won't need this workaround. See the [official Psycopg installation guide](https://www.psycopg.org/psycopg3/docs/basic/install.html).
