@@ -88,11 +88,26 @@ These findings are not all confirmed business errors. Preserve source data and d
 - SQL that executes successfully still needs validation.
 - Reporting metrics need documented business definitions.
 
-## 7. Current state and next action
+## Current state and next action
 
-The raw, staging, mart and first reporting layers have been built and inspected.
+The end-to-end pipeline runner is implemented in `scripts/run_pipeline.py`.
 
-**Next:** verify Git status and save any pending source changes. Then review the current pipeline against the final deliverable requirements before adding more features. Do not add another reporting view until its value and purpose are clear.
+Run it from the project root with:
+
+```powershell
+python scripts/run_pipeline.py
+```
+
+The first full run succeeded:
+- 9 raw CSV files loaded.
+- Staging, mart and reporting layers rebuilt.
+- 99,441 orders matched across raw, staging and mart.
+- 112,650 order items matched across raw, staging and mart.
+- 634 daily sales reporting rows generated.
+
+PostgreSQL connectivity was verified from a fresh terminal.
+
+**Next:** add automated data-quality checks for key uniqueness, referential integrity, valid values and business rules. Matching row counts alone does not prove the data is correct.
 
 ## 8. Important project paths
 
