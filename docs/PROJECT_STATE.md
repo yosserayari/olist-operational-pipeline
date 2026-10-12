@@ -102,6 +102,25 @@ These are reported rather than automatically corrected.
 
 **Next:** strengthen automated testing and make setup requirements clear so another engineer can reproduce the pipeline.
 
+### Automated tests
+
+Test file: `tests/test_pipeline_integrity.py`
+
+Run tests with:
+
+```powershell
+python -m pytest -v
+
+### Automated testing
+
+**What I built:** Eight pytest tests that verify properties of the database produced by the pipeline.
+
+**Why:** A successful pipeline run does not prove its output is correct. Tests make important assumptions repeatable and catch regressions.
+
+**Current result:** All 8 tests passed.
+
+**Practice question:** What is the difference between checking data quality during a pipeline run and testing the pipeline's output afterward?
+
 ## 8. Important project paths
 
 - `src/ingestion/load_raw.py`
