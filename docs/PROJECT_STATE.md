@@ -54,6 +54,19 @@ Defined in `sql/marts/build_marts.sql`:
 
 It includes daily order counts, delivered and active orders, orders without item records, item value, freight value, gross order value and average delivered order value.
 
+### Reproducibility check
+
+- Created a separate Python virtual environment.
+- Installed dependencies from `requirements.txt`.
+- The first pipeline run exposed a missing `pandas` dependency.
+- Added `pandas==3.0.6` to `requirements.txt`.
+- Re-ran the pipeline successfully.
+- Re-ran the test suite: 8 tests passed.
+
+The fresh-environment test caught and resolved an undeclared dependency.
+This verifies the pipeline against the current local database and source files,
+but does not yet prove setup on a separate computer.
+
 ## 5. Verified findings
 
 - Raw orders: 99,441 rows.
