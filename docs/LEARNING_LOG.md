@@ -85,3 +85,14 @@ The test uses mocked connections, so it does not modify the real database.
 the pipeline behaves when that function fails.
 
 **Current result:** 11 tests passed.
+
+### Database transactions
+
+**What I learned:** A transaction groups database changes so they
+can be committed together or rolled back when a step fails.
+
+**Why it matters:** A failed pipeline should not leave a partially
+rebuilt database.
+
+**Practice question:** What could happen if raw ingestion commits
+successfully but a later data-quality check fails?f

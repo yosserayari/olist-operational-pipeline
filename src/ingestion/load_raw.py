@@ -77,16 +77,18 @@ def load_table(conn, table_name, csv_file):
     print(f"  -> {len(df):,} rows loaded")
 
 
+def load_raw(conn):
+    for table_name, csv_file in TABLES.items():
+        load_table(conn, table_name, csv_file)
+
+    print("\nRaw ingestion completed.")
+
+
 def main():
     load_dotenv()
 
     with get_connection() as conn:
-        for table_name, csv_file in TABLES.items():
-            load_table(conn, table_name, csv_file)
-
-        conn.commit()
-
-    print("\nRaw ingestion completed.")
+        load_raw(conn)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 import pytest
 
 import scripts.run_pipeline as pipeline
-from src.ingestion import load_raw
 
 
 class FakeConnection:
@@ -33,8 +32,7 @@ def test_pipeline_stops_before_marts_on_quality_failure(monkeypatch):
         lambda conn, path: executed_sql.append(path),
     )
 
-    monkeypatch.setattr(load_raw, "main", lambda: None)
-
+    monkeypatch.setattr(pipeline, "load_raw", lambda conn: None)
     # Simulate a critical quality-check failure.
     def fail_quality_checks(conn):
         raise RuntimeError("Simulated critical failure")

@@ -67,6 +67,19 @@ The fresh-environment test caught and resolved an undeclared dependency.
 This verifies the pipeline against the current local database and source files,
 but does not yet prove setup on a separate computer.
 
+### Transaction handling
+
+The pipeline uses one PostgreSQL connection for raw ingestion,
+staging, quality checks, mart creation and reporting.
+
+A failure inside the transaction causes the database changes
+from that run to roll back.
+
+The pipeline completes successfully in the local development
+environment, and the test suite contains 12 passing tests.
+
+A real PostgreSQL rollback test verifies that changes made
+inside a failed transaction are not committed.
 ## 5. Verified findings
 
 - Raw orders: 99,441 rows.

@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parents[1]
 os.chdir(ROOT)
 sys.path.insert(0, str(ROOT))
+from src.ingestion.load_raw import load_raw
 from src.validation.data_quality_checks import run_data_quality_checks
 
 load_dotenv(ROOT / ".env")
@@ -73,11 +74,10 @@ def execute_sql_file(conn, relative_path):
 
 
 def main():
-    # 1. Verify that all source files are present.
     data_dir = ROOT / "data" / "raw"
+
     missing_files = [
-        filename
-        for filename in RAW_FILES
+        filename for filename in RAW_FILES
         if not (data_dir / filename).is_file()
     ]
 
@@ -89,47 +89,26 @@ def main():
 
     db_config = get_db_config()
 
-    # 2. Ensure the raw schema exists.
+    print("\nStep 1/4: Loading raw data...")
+
+    # One connection and transaction for the entire rebuild.
     with psycopg.connect(**db_config) as conn:
         execute_sql_file(conn, "sql/raw_schema.sql")
+        load_raw(conn)
 
-    # 3. Reload all raw tables from the source CSVs.
-    print("\nStep 1/4: Loading raw data...")
-    from src.ingestion.load_raw import main as load_raw_main
+        print("\nSteps 2-4/4: Building downstream layers...")
 
-    load_raw_main()
-
-    # 4. Rebuild staging, marts and reporting.
-    print("\nSteps 2-4/4: Building downstream layers...")
-
-    with psycopg.connect(**db_config) as conn:
-        execute_sql_file(
-            conn,
-            "sql/staging/build_staging.sql",
-        )
+        execute_sql_file(conn, "sql/staging/build_staging.sql")
         run_data_quality_checks(conn)
 
-        # The reporting view depends on mart tables.
-        # Drop it before rebuilding those tables.
+        # Remove the view before rebuilding its dependent tables.
         with conn.cursor() as cur:
-            cur.execute(
-                "CREATE SCHEMA IF NOT EXISTS reporting;"
-            )
-            cur.execute(
-                "DROP VIEW IF EXISTS reporting.daily_sales;"
-            )
+            cur.execute("CREATE SCHEMA IF NOT EXISTS reporting")
+            cur.execute("DROP VIEW IF EXISTS reporting.daily_sales")
 
-        execute_sql_file(
-            conn,
-            "sql/marts/build_marts.sql",
-        )
+        execute_sql_file(conn, "sql/marts/build_marts.sql")
+        execute_sql_file(conn, "sql/views/build_reporting_views.sql")
 
-        execute_sql_file(
-            conn,
-            "sql/views/build_reporting_views.sql",
-        )
-
-        # 5. Verify key row counts.
         with conn.cursor() as cur:
             cur.execute("""
                 SELECT
@@ -152,16 +131,12 @@ def main():
                 reporting_days,
             ) = cur.fetchone()
 
-        if not (
-            raw_orders == staging_orders == mart_orders
-        ):
+        if not (raw_orders == staging_orders == mart_orders):
             raise RuntimeError(
                 "Order row counts do not match across layers."
             )
 
-        if not (
-            raw_items == staging_items == mart_items
-        ):
+        if not (raw_items == staging_items == mart_items):
             raise RuntimeError(
                 "Order-item row counts do not match across layers."
             )
@@ -173,12 +148,10 @@ def main():
 
         print("\nValidation passed.")
         print(f"Orders across raw/staging/mart: {raw_orders:,}")
-        print(
-            "Order items across raw/staging/mart: "
-            f"{raw_items:,}"
-        )
+        print(f"Order items across raw/staging/mart: {raw_items:,}")
         print(f"Daily sales rows: {reporting_days:,}")
 
+    # Reaching this point means the transaction committed.
     print("\nPipeline completed successfully.")
 
 
