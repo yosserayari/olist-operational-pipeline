@@ -1,0 +1,2 @@
+review_id,order_id,review_score,review_comment_title,review_comment_message,review_creation_date,review_answer_timestamp
+REVIEW-1,ORDER-1,5,Good,Good delivery,2017-01-04 10:00:00,2017-01-05 10:00:00

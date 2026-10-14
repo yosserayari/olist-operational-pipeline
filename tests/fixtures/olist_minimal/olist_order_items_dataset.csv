@@ -1,0 +1,2 @@
+order_id,order_item_id,product_id,seller_id,shipping_limit_date,price,freight_value
+ORDER-1,1,PROD-1,SELLER-1,2017-01-02 08:00:00,100.00,10.00

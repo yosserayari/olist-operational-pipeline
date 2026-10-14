@@ -55,9 +55,13 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
-      - name: Run unit and transaction tests
-        run: >
-          python -m pytest -v
-          tests/test_pipeline_failure_flow.py
-          tests/test_quality_check_behavior.py
-          tests/test_transaction_rollback.py
+      - name: Prepare synthetic source data
+        run: |
+          mkdir -p data/raw
+          cp tests/fixtures/olist_minimal/*.csv data/raw/
+
+      - name: Build database with synthetic data
+        run: python scripts/run_pipeline.py
+
+      - name: Run all tests
+        run: python -m pytest -v
