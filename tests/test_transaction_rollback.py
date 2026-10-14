@@ -5,6 +5,7 @@ from uuid import uuid4
 import psycopg
 import pytest
 from dotenv import load_dotenv
+pytestmark = pytest.mark.integration
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -4,6 +4,7 @@ from pathlib import Path
 import psycopg
 import pytest
 from dotenv import load_dotenv
+pytestmark = pytest.mark.integration
 
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
