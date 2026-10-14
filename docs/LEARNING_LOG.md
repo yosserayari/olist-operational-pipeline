@@ -96,3 +96,17 @@ rebuilt database.
 
 **Practice question:** What could happen if raw ingestion commits
 successfully but a later data-quality check fails?f
+
+### Business-ready reporting metrics
+
+Improved `reporting.daily_sales` to distinguish in-progress, canceled,
+unavailable and delivered orders, and to report delivered product,
+freight and gross order values separately from all recorded orders.
+
+Added a test comparing delivered product value and delivered order
+counts against the underlying mart tables.
+
+Current result: 13 tests passed.
+
+Important distinction: delivered gross order value is not profit or
+verified cash collected.

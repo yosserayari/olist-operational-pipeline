@@ -22,18 +22,50 @@ SELECT
     ) AS delivered_orders,
 
     COUNT(*) FILTER (
-        WHERE o.order_status NOT IN ('canceled', 'unavailable')
-    ) AS active_orders,
+        WHERE o.order_status IN (
+            'created', 'approved', 'invoiced',
+            'processing', 'shipped'
+        )
+    ) AS in_progress_orders,
+
+    COUNT(*) FILTER (
+        WHERE o.order_status = 'canceled'
+    ) AS canceled_orders,
+
+    COUNT(*) FILTER (
+        WHERE o.order_status = 'unavailable'
+    ) AS unavailable_orders,
 
     COUNT(*) FILTER (
         WHERE ot.order_id IS NULL
     ) AS orders_without_items,
 
-    ROUND(COALESCE(SUM(ot.product_value), 0), 2) AS product_value,
+    ROUND(COALESCE(SUM(ot.product_value), 0), 2)
+        AS ordered_product_value,
 
-    ROUND(COALESCE(SUM(ot.freight_value), 0), 2) AS freight_value,
+    ROUND(COALESCE(SUM(ot.freight_value), 0), 2)
+        AS ordered_freight_value,
 
-    ROUND(COALESCE(SUM(ot.order_value), 0), 2) AS gross_order_value,
+    ROUND(COALESCE(SUM(ot.order_value), 0), 2)
+        AS ordered_gross_value,
+
+    ROUND(COALESCE(
+        SUM(ot.product_value) FILTER (
+            WHERE o.order_status = 'delivered'
+        ), 0
+    ), 2) AS delivered_product_value,
+
+    ROUND(COALESCE(
+        SUM(ot.freight_value) FILTER (
+            WHERE o.order_status = 'delivered'
+        ), 0
+    ), 2) AS delivered_freight_value,
+
+    ROUND(COALESCE(
+        SUM(ot.order_value) FILTER (
+            WHERE o.order_status = 'delivered'
+        ), 0
+    ), 2) AS delivered_gross_order_value,
 
     ROUND(
         AVG(ot.order_value) FILTER (

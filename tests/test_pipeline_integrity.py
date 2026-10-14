@@ -138,3 +138,32 @@ def test_daily_sales_has_one_row_per_date(db):
     """)
 
     assert duplicate_dates == 0
+
+def test_delivered_sales_metrics_match_order_items(db):
+    expected = value(db, """
+        SELECT COALESCE(SUM(i.price), 0)
+        FROM mart.fact_order_items i
+        JOIN mart.fact_orders o
+          ON o.order_id = i.order_id
+        WHERE o.order_status = 'delivered'
+    """)
+
+    reported = value(db, """
+        SELECT COALESCE(SUM(delivered_product_value), 0)
+        FROM reporting.daily_sales
+    """)
+
+    assert round(float(reported), 2) == round(float(expected), 2)
+
+    expected_orders = value(db, """
+        SELECT COUNT(*)
+        FROM mart.fact_orders
+        WHERE order_status = 'delivered'
+    """)
+
+    reported_orders = value(db, """
+        SELECT COALESCE(SUM(delivered_orders), 0)
+        FROM reporting.daily_sales
+    """)
+
+    assert reported_orders == expected_orders
